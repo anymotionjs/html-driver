@@ -17,6 +17,10 @@
     "dev": "tsc -w",
     "lint": "eslint source"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:anymotionjs/html-driver.git"
+  },
   "peerDependencies": {
     "@anymotion/core": "^0.0.1"
   },

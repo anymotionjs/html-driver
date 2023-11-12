@@ -1,5 +1,5 @@
 import type { TweenPropertyDriver } from '@anymotion/core'
-import { createNumberInterpolate, isHTMLElementType, splitNumberUnit } from './common'
+import { createNumberInterpolate, isFalsyProperty, isHTMLElementType, splitNumberUnit } from './common'
 
 declare global {
   interface TweenProperties {
@@ -43,6 +43,7 @@ function parseRotate(value: string): [number, number, number, number, string] {
 
 export const rotate: TweenPropertyDriver = ({ from, to }, element) => {
   if (!isHTMLElementType(element)) return null
+  if (isFalsyProperty(['rotate'], to, from)) return null
 
   const rawRotate = getRawRotate(element)
 
@@ -56,7 +57,7 @@ export const rotate: TweenPropertyDriver = ({ from, to }, element) => {
   const angleInterpolate = createNumberInterpolate(fromAngle, toAngle, { decimalPlaces: 2 })
 
   return {
-    transform(progress) {
+    drive(progress) {
       const x = xInterpolate(progress)
       const y = yInterpolate(progress)
       const z = zInterpolate(progress)

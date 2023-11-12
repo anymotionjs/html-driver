@@ -46,9 +46,9 @@ export function createColorInterpolate(start: string, end: string) {
     const b = parseInt(color.substring(4, 6), 16)
 
     // 检查是否存在 alpha 分量
-    let a = 255
+    let a = 1
     if (color.length === 8) {
-      a = parseInt(color.substring(6, 8), 16)
+      a = (parseInt(color.substring(6, 8), 16) / 255)
     }
 
     return [r, g, b, a]
@@ -61,7 +61,7 @@ export function createColorInterpolate(start: string, end: string) {
       .map((value) => parseFloat(value.trim()))
 
     const [r, g, b] = values
-    return [r, g, b, 255]
+    return [r, g, b, 1]
   }
 
   function parseRGBAStringToRGBA(rgba: string): RGBA {
@@ -70,7 +70,8 @@ export function createColorInterpolate(start: string, end: string) {
       .split(",")
       .map((value) => parseFloat(value.trim()))
 
-    const [r, g, b, a = 255] = values
+
+    const [r, g, b, a = 1] = values
     return [r, g, b, a]
   }
 
@@ -93,7 +94,7 @@ export function createColorInterpolate(start: string, end: string) {
   const rInterpolate = createNumberInterpolate(fromR, toR, { decimalPlaces: 0, max: 255, min: 0 })
   const gInterpolate = createNumberInterpolate(fromG, toG, { decimalPlaces: 0, max: 255, min: 0 })
   const bInterpolate = createNumberInterpolate(fromB, toB, { decimalPlaces: 0, max: 255, min: 0 })
-  const aInterpolate = createNumberInterpolate(fromA, toA, { decimalPlaces: 0, max: 255, min: 0 })
+  const aInterpolate = createNumberInterpolate(fromA, toA, { decimalPlaces: 3, max: 1, min: 0 })
 
   return (progress: number) => {
     const r = rInterpolate(progress)

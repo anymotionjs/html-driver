@@ -1,5 +1,5 @@
 import type { TweenPropertyDriver } from '@anymotion/core'
-import { createColorInterpolate, isHTMLElementType } from './common'
+import { createColorInterpolate, isFalsyProperty, isHTMLElementType } from './common'
 
 declare global {
   interface TweenProperties {
@@ -14,6 +14,7 @@ function getRawBackgroundColor(element: Element): string {
 
 export const backgroundColor: TweenPropertyDriver = ({ from, to }, element) => {
   if (!isHTMLElementType(element)) return null
+  if (isFalsyProperty(['backgroundColor'], to, from)) return null
 
   const rawColor = getRawBackgroundColor(element)
 
@@ -23,7 +24,7 @@ export const backgroundColor: TweenPropertyDriver = ({ from, to }, element) => {
   const interpolate = createColorInterpolate(localFrom, localTo)
 
   return {
-    transform(progress) {
+    drive(progress) {
       const color = interpolate(progress)
       element.style.backgroundColor = `${color}`
     }

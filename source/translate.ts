@@ -1,5 +1,5 @@
 import type { TweenPropertyDriver } from '@anymotion/core'
-import { createNumberInterpolate, isHTMLElementType, splitNumberUnit } from './common'
+import { createNumberInterpolate, isFalsyProperty, isHTMLElementType, splitNumberUnit } from './common'
 
 declare global {
   interface TweenProperties {
@@ -20,6 +20,7 @@ function parseTranslate(value: string): [string, string, string] {
 
 export const translate: TweenPropertyDriver = ({ from, to }, element) => {
   if (!isHTMLElementType(element)) return null
+  if (isFalsyProperty(['translate', 'translate'], to, from)) return null
 
   const rawTranslate = getRawTranslate(element)
 
@@ -43,7 +44,7 @@ export const translate: TweenPropertyDriver = ({ from, to }, element) => {
 
 
   return {
-    transform(progress) {
+    drive(progress) {
       const x = xInterpolate(progress)
       const y = yInterpolate(progress)
       const z = zInterpolate(progress)

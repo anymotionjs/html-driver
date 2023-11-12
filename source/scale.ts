@@ -1,5 +1,5 @@
 import type { TweenPropertyDriver } from '@anymotion/core'
-import { createNumberInterpolate, isHTMLElementType } from './common'
+import { createNumberInterpolate, isFalsyProperty, isHTMLElementType } from './common'
 
 declare global {
   interface TweenProperties {
@@ -21,6 +21,7 @@ function getRawScale(element: Element): number | [number, number] {
 
 export const scale: TweenPropertyDriver = ({ from, to }, element) => {
   if (!isHTMLElementType(element)) return null
+  if (isFalsyProperty(['scale'], to, from)) return null
 
   const rawScale = getRawScale(element)
   const localTo = to?.scale ?? rawScale
@@ -33,7 +34,7 @@ export const scale: TweenPropertyDriver = ({ from, to }, element) => {
   const heightInterpolate = createNumberInterpolate(fromHeight, toHeight, { decimalPlaces: 2, min: 0 })
 
   return {
-    transform(progress) {
+    drive(progress) {
       const width = widthInterpolate(progress)
       const height = heightInterpolate(progress)
       element.style.scale = `${width} ${height}`
